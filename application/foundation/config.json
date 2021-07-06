@@ -1,0 +1,15 @@
+{
+    "Database": {
+        "hostname": "127.0.0.1",
+        "username": "Project1",
+        "password": "Project1",
+        "database": "project1",
+        "port": "3306"
+    },
+    "JWT": {
+        "secret": "833cded2ea8a1ae9ccf1cbaff316b577b9a462e6abd8263dc42dfbcc33da79c869357768c8f180be2000d46aa05ed16267d1f3b6490cb18c94fa7b225a0cfb03"
+    },
+    "Express": {
+        "port": 11111
+    }
+}
