@@ -2,11 +2,11 @@ const database = require('../foundation/database.class');
 const crypto = require('crypto');
 
 class UserModel {
-    static register(res, data, callback) {
-        this.checkUniqueEmail(data, selectResult => {
+    static register(firstname, lastname, email, password, res, callback) {
+        this.checkUniqueEmail(firstname, lastname, email, password, selectResult => {
             if (!selectResult.email) {
-                let hashed = crypto.pbkdf2Sync(data.password, this.salt, 1000, 64, `sha512`).toString(`hex`);
-                let sql = "insert into users(firstname,lastname,email,password,isActive,createDate) values('" + data.firstname + "','" + data.lastname + "','" + data.email + "','" + hashed + "','yes',NOW());";
+                let hashed = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`);
+                let sql = "insert into users(firstname,lastname,email,password,isActive,createDate) values('" + firstname + "','" + lastname + "','" + email + "','" + hashed + "','yes',NOW());";
                 database.insert(sql, (result) => { callback(result) });
             } else {
                 res.json({ "data": "email already taken" });
@@ -14,9 +14,9 @@ class UserModel {
         });
     }
 
-    static login(res, data, callback) {
-        let hashed = crypto.pbkdf2Sync(data.password, this.salt, 1000, 64, `sha512`).toString(`hex`);
-        let sql = "select id from users where email = " + data.res + " password = " + hashed;
+    static login(email, password, res, callback) {
+        let hashed = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`);
+        let sql = "select id from users where email = " + email + " password = " + hashed;
         database.select(sql, (result) => {
             if (!result.id) {
                 res.json({ "data": "Incorrect email or password", "error": 1 });
@@ -26,8 +26,8 @@ class UserModel {
         });
     }
 
-    static profile(res, req, callback) {
-        let sql = "select * from users where id=" + req.userID;
+    static profile(userID, res, callback) {
+        let sql = "select * from users where id=" + userID;
         database.select(sql, (result) => {
             callback(result);
         });
